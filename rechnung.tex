@@ -1,0 +1,88 @@
+\documentclass{scrlttr2}
+
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp} % €-Zeichen
+\usepackage{lmodern} % mathpazo lmodern
+\usepackage{color}
+\usepackage{spreadtab} % spreadsheet
+\usepackage{tabularx} % tabelle
+\usepackage{booktabs} % toprule, midrule...
+
+\newcommand{\toname}{EmpfängerName}
+\newcommand{\toaddress}{EmpfängerStraße\\12345 Stadt}
+\newcommand{\taxID}{Steuernummer: 333/4444/4444\\Finanzamt Name}
+\renewcommand{\familydefault}{\sfdefault}
+
+\setkomavar{subject}{Rechnung}
+\setkomavar{invoice}{20181114-1} % Rechnungsnummer
+\setkomavar{date}[Rechnungsdatum]{\today} % Rechnungsdatum
+\setkomavar{fromname}{Max Mustermann}
+\setkomavar{fromaddress}{SenderStraße 12\\55555 Stadt}
+\setkomavar{backaddressseparator}{·} % Trennzeichen Rücksendeadresse
+\setkomavar{fromemail}[\Letter~]{\color[gray]{.3}mail@domain.de}
+\setkomavar{frommobilephone}{\color[gray]{.3}+49\,177\,11\,22\,33\,4}
+\setkomavar{frombank}{IBAN: 111\,1111\,1111\,1111\,1111\,11\\BIC: XXXX\,XX\,XX\,XXX\\meineBank}
+\setkomavar{signature}{\usekomavar{fromname}}
+\setkomavar{place}{Musterhausen} % nur sichtbar, wenn keine Geschäftszeile
+\setkomavar{firstfoot}{% Fußzeile
+  \rule[3pt]{\textwidth}{.4pt} \\
+  \parbox[t]{\textwidth}{\footnotesize
+    \begin{tabular}[t]{@{}l}
+      \usekomavar{frombank}
+    \end{tabular}
+    \hfill
+    \begin{tabular}[t]{l@{}}
+      \taxID
+    \end{tabular}
+  }
+}
+
+\KOMAoptions{
+  firsthead=true,
+  fromalign=right, % center, false, left, locationleft, locationright, right
+  fromrule=false, % afteraddress, aftername, false
+  fromemail=true,
+  frommobilephone=true,
+  symbolicnames=true,
+  numericaldate=true,
+  firstfoot=true,
+  parskip=full % Absatzabstand
+}
+
+\makeatletter
+\@addtoplength{sigbeforevskip}{-1.5em} % kein Freiraum für eine Unterschrift
+\@addtoplength{firstfootvpos}{-2em} % Fußzeile vergrößert
+\makeatother
+
+\begin{document}
+\begin{letter}{\toname\\\toaddress}
+\opening{Sehr geehrte Damen und Herren,}
+
+ich bedanke mich für die gute Zusammenarbeit und stellen Ihnen vereinbarungsgemäß nachfolgende Leistungen in Rechnung. Sofern nicht anders angegeben, entspricht der Leistungszeitraum den Monat des Rechnungsdatums.
+
+\STsetdecimalsep{{,}}
+\STautoround*{2}
+\begin{spreadtab}{{tabularx}{\textwidth}{Xrrr}}
+\toprule
+@\multicolumn{1}{l}{Bezeichnung}  &
+@\multicolumn{1}{l}{Preis/Stunde} &
+@\multicolumn{1}{l}{Anzahl}       &
+@\multicolumn{1}{l}{Betrag}       \\
+\midrule
+@Beratung                                     &
+:={42.00}\,€ & 2 & :={[-2,0]*[-1,0]}\,€      \\
+@Tests                                        &
+:={30.00}\,€ & 1.5 & :={[-2,0]*[-1,0]}\,€     \\
+\midrule \midrule
+\multicolumn{4}{r}{Gesamtsumme :={sum(d2:[3,-1])}\,€} \\
+\bottomrule
+\end{spreadtab}
+
+Im ausgewiesenen Rechnungsbetrag ist gemäß §\,19\,UStG keine Umsatzsteuer
+enthalten. Bitte überweisen Sie den Betrag innerhalb von 14\,Tagen auf das unten angegebene Konto.
+
+\closing{Mit freundlichen Grüßen}
+\end{letter}
+\end{document}
